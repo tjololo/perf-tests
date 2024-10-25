@@ -1,0 +1,40 @@
+name: ci
+on:
+  push:
+    branches: main
+    paths:
+        - network/benchmarks/netperf/**
+        - .github/workflows/mainnetperf.yaml
+
+jobs:
+  build:
+    name: ""
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: network/benchmarks/netperf
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Prepare Dockerbuild folder
+        run: |
+            mkdir -p Dockerbuild/nptest && \
+            cp -f Dockerfile Dockerbuild/ && \
+            cp -f nptest/nptest.go Dockerbuild/nptest/ && \
+            cp -f go.mod Dockerbuild/ && \
+            cp -f go.sum Dockerbuild/
+      - name: Login to DockerHub
+        uses: docker/login-action@v3 
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v6
+        with:
+            push: true
+            context: Dockerbuild
+            tags: ghcr.io/${{ github.repository }}/netperf-latest:latest
