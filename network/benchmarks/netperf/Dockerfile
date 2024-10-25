@@ -28,7 +28,7 @@ WORKDIR /workspace
 COPY nptest/nptest.go nptest.go
 COPY go.sum go.sum
 COPY go.mod go.mod
-
+ENV CGO_ENABLED=0
 RUN go build -o nptests
 
 FROM debian:bullseye
