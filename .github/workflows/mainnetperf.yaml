@@ -7,8 +7,14 @@ on:
         - .github/workflows/mainnetperf.yaml
 
 jobs:
+  test:
+    name: Test folder
+    runs-on: ubuntu-latest
+    steps:
+      - name: tree
+        run: tree .
   build:
-    name: ""
+    name: "Build"
     runs-on: ubuntu-latest
     defaults:
       run:
