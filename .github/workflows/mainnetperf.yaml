@@ -40,5 +40,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
             push: true
-            context: ./Dockerbuild
+            context: ./network/benchmarks/netperf/Dockerbuild
             tags: ghcr.io/${{ github.repository }}/netperf-latest:latest
