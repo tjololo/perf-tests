@@ -7,14 +7,6 @@ on:
         - .github/workflows/mainnetperf.yaml
 
 jobs:
-  test:
-    name: Test folder
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: tree
-        run: tree .
   build:
     name: "Build"
     runs-on: ubuntu-latest
@@ -35,6 +27,8 @@ jobs:
             cp -f nptest/nptest.go Dockerbuild/nptest/ && \
             cp -f go.mod Dockerbuild/ && \
             cp -f go.sum Dockerbuild/
+      - name: Test
+        run: ls -la
       - name: Login to DockerHub
         uses: docker/login-action@v3 
         with:
@@ -46,5 +40,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
             push: true
-            context: Dockerbuild
+            context: ./Dockerbuild
             tags: ghcr.io/${{ github.repository }}/netperf-latest:latest
